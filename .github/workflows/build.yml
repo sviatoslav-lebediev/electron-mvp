@@ -1,0 +1,48 @@
+name: Build
+on:
+  workflow_dispatch:
+
+jobs:
+  build_on_linux:
+    if: ${{ false }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@master
+        with:
+          node-version: 16
+      - name: install dependencies
+        run: npm ci
+      - name: build
+        run: npm run build
+
+  build_on_mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@master
+        with:
+          node-version: 16
+      - name: install dependencies
+        run: npm ci
+      - name: build
+        run: npm run package --mac
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: mac-disp
+          path: |
+            release/build/mac
+
+  build_on_win:
+    if: ${{ false }}
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@master
+        with:
+          node-version: 16
+      - name: install dependencies
+        run: npm ci
+      - name: build
+        run: npm run build
